@@ -1,5 +1,6 @@
 import React, {forwardRef, useImperativeHandle, useCallback} from 'react';
-import {View, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, Platform} from 'react-native';
+import styles from './styles';
 import {isExist} from './helpers/isExist';
 import Input from './components/Input';
 import DropdownOverlay from './components/DropdownOverlay';
@@ -45,7 +46,7 @@ const SelectDropdown = (
 ) => {
   const disabledInternalSearch = !!onChangeSearchInputText;
   /* ******************* hooks ******************* */
-  const {dropdownButtonRef, dropDownFlatlistRef} = useRefs();
+  const {dropdownButtonRef, dropDownFlatlistRef, dropdownSearchInputRef} = useRefs();
   const {
     dataArr, //
     selectedItem,
@@ -121,11 +122,20 @@ const SelectDropdown = (
       }
     }, 100);
   };
+  const onShowModal = () => {
+    if (search && dropdownSearchInputRef.current !== null && Platform.OS === 'android') {
+      setTimeout(() => {
+        dropdownSearchInputRef.current.blur();
+        dropdownSearchInputRef.current.focus();
+      }, 100);
+    }
+  };
   /* ******************** Render Methods ******************** */
   const renderSearchView = () => {
     return (
       search && (
         <Input
+          ref={dropdownSearchInputRef}
           searchViewWidth={buttonLayout.w}
           value={searchTxt}
           valueColor={searchInputTxtColor}
@@ -164,7 +174,7 @@ const SelectDropdown = (
   const renderDropdown = () => {
     return (
       isVisible && (
-        <DropdownModal statusBarTranslucent={statusBarTranslucent} visible={isVisible} onRequestClose={onRequestClose}>
+        <DropdownModal statusBarTranslucent={statusBarTranslucent} visible={isVisible} onRequestClose={onRequestClose} onShow={onShowModal}>
           <DropdownOverlay onPress={closeDropdown} backgroundColor={dropdownOverlayColor} />
           <DropdownWindow layoutStyle={dropdownWindowStyle}>
             <FlatList
