@@ -1,6 +1,6 @@
 import React, {forwardRef, useImperativeHandle, useCallback} from 'react';
 import {View, Text, TouchableOpacity, FlatList, Platform} from 'react-native';
-import styles from './styles';
+/*import styles from './styles';*/
 import {isExist} from './helpers/isExist';
 import Input from './components/Input';
 import DropdownOverlay from './components/DropdownOverlay';
